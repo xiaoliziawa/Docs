@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 
 interface SearchDoc {
@@ -191,15 +191,15 @@ function handleKeydown(event: KeyboardEvent) {
   position: relative;
   display: flex;
   align-items: center;
-  background: #f3f4f6;
-  border: 1px solid #e5e7eb;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
   border-radius: 999px;
   padding: 0.45rem 0.85rem 0.45rem 2.25rem;
-  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .search-bar__input-wrapper:focus-within {
-  background: #ffffff;
+  background: var(--color-bg-surface);
   border-color: rgba(99, 102, 241, 0.4);
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
 }
@@ -208,7 +208,7 @@ function handleKeydown(event: KeyboardEvent) {
   position: absolute;
   left: 0.85rem;
   font-size: 1rem;
-  opacity: 0.55;
+  opacity: 0.6;
 }
 
 .search-bar__input {
@@ -217,11 +217,12 @@ function handleKeydown(event: KeyboardEvent) {
   outline: none;
   background: transparent;
   font-size: 0.95rem;
-  color: #111827;
+  color: var(--color-text-primary);
 }
 
 .search-bar__input::placeholder {
-  color: #9ca3af;
+  color: var(--color-text-secondary);
+  opacity: 0.6;
 }
 
 .search-bar__results {
@@ -232,13 +233,14 @@ function handleKeydown(event: KeyboardEvent) {
   margin: 0;
   padding: 0.4rem 0;
   list-style: none;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
   border-radius: 0.75rem;
-  box-shadow: 0 14px 35px rgba(15, 23, 42, 0.12);
+  box-shadow: 0 14px 35px var(--color-shadow);
   max-height: 320px;
   overflow-y: auto;
   z-index: 12;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .search-bar__result {
@@ -252,34 +254,35 @@ function handleKeydown(event: KeyboardEvent) {
   border: none;
   text-align: left;
   cursor: pointer;
+  color: var(--color-text-primary);
+  transition: color var(--transition-fast), background-color var(--transition-fast);
 }
 
 .search-bar__result-title {
   display: block;
   font-weight: 600;
-  color: #111827;
 }
 
 .search-bar__result-snippet {
   display: block;
   margin-top: 0.25rem;
   font-size: 0.82rem;
-  color: #6b7280;
+  color: var(--color-text-secondary);
 }
 
 .search-bar__result:hover,
 .search-bar__result.is-active {
-  background: rgba(99, 102, 241, 0.08);
+  background: var(--color-toolbar-hover);
 }
 
 .search-bar__result:hover button,
 .search-bar__result.is-active button {
-  color: #4f46e5;
+  color: var(--color-accent-strong);
 }
 
 .search-bar__empty {
   padding: 0.75rem 1rem;
-  color: #6b7280;
+  color: var(--color-text-secondary);
 }
 
 .fade-enter-active,
