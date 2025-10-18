@@ -226,14 +226,6 @@ function handleThemeToggle(): void {
           v-show="!sidebarCollapsed"
           :aria-hidden="sidebarCollapsed"
         />
-        <button
-          v-if="sidebarCollapsed"
-          type="button"
-          class="layout__sidebar-expand"
-          @click="toggleSidebar"
-        >
-          展开导航
-        </button>
       </aside>
       <main class="layout__content">
         <MarkdownViewer v-if="currentDoc" :content="currentDoc.html" />

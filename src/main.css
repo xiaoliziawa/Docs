@@ -174,21 +174,6 @@ a {
   pointer-events: none;
 }
 
-.layout__sidebar-expand {
-  display: none;
-  margin: 0 auto;
-  padding: 0.45rem 0.9rem;
-  border-radius: 999px;
-  border: none;
-  background: var(--color-card);
-  color: var(--color-accent-strong);
-  cursor: pointer;
-}
-
-.layout__sidebar.is-collapsed .layout__sidebar-expand {
-  display: block;
-}
-
 .layout__content {
   flex: 1;
   padding: 2.5rem 3rem;
