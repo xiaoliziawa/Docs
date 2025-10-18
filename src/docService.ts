@@ -1,4 +1,8 @@
-﻿import { marked } from 'marked'
+﻿import MarkdownIt from 'markdown-it'
+import markdownItDeflist from 'markdown-it-deflist'
+import markdownItFootnote from 'markdown-it-footnote'
+import markdownItTaskLists from 'markdown-it-task-lists'
+import markdownItMathjax3 from 'markdown-it-mathjax3'
 import hljs from 'highlight.js'
 
 import sidebarConfig from './sidebarConfig.js'
@@ -8,20 +12,36 @@ const markdownModules = import.meta.glob('../docs/**/*.md', {
   import: 'default',
 }) as Record<string, () => Promise<string>>
 
-const renderer = new marked.Renderer()
+const markdown = new MarkdownIt({
+  html: true,
+  linkify: true,
+  typographer: true,
+})
+  .use(markdownItFootnote)
+  .use(markdownItDeflist)
+  .use(markdownItTaskLists, { label: true, labelAfter: true })
+  .use(markdownItMathjax3)
 
-renderer.code = ({ text, lang }) => {
-  const language = (lang ?? '').trim()
+
+function renderCodeBlock(code: string, info?: string): string {
+  const language = (info ?? '').trim()
   const validLanguage = language && hljs.getLanguage(language) ? language : ''
   const highlighted = validLanguage
-    ? hljs.highlight(text, { language: validLanguage }).value
-    : hljs.highlightAuto(text).value
-  const languageClass = validLanguage ? ` language-${validLanguage}` : ''
+    ? hljs.highlight(code, { language: validLanguage, ignoreIllegals: true }).value
+    : hljs.highlightAuto(code).value
+  const classNames = ['hljs']
 
-  return `<pre><code class="hljs${languageClass}">${highlighted}</code></pre>`
+  if (validLanguage) {
+    classNames.push(`language-${validLanguage}`)
+  }
+
+  return `<pre><code class="${classNames.join(' ')}">${highlighted}</code></pre>`
 }
 
-marked.setOptions({ renderer })
+type FenceToken = { content: string; info: string }
+
+markdown.renderer.rules.fence = (tokens: FenceToken[], idx: number): string => renderCodeBlock(tokens[idx].content, tokens[idx].info)
+markdown.renderer.rules.code_block = (tokens: FenceToken[], idx: number): string => renderCodeBlock(tokens[idx].content)
 
 export interface DocRecord {
   slug: string
@@ -73,7 +93,7 @@ export async function loadAllDocs(): Promise<{
     const slug = path.replace('../docs/', '').replace(/\.md$/i, '')
     const section = slug.includes('/') ? slug.split('/')[0] : slug
     const title = extractTitle(raw) ?? deriveTitle(slug.split('/').pop() ?? slug)
-    const html = await marked.parse(raw)
+    const html = markdown.render(raw)
 
     docs.push({ slug, section, title, raw, html })
   }

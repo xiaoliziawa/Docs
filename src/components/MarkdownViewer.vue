@@ -36,6 +36,21 @@ async function handleCopy(button: HTMLButtonElement, text: string) {
   }
 }
 
+type MathJaxController = { typesetPromise?: (elements?: (HTMLElement | string)[]) => Promise<unknown> }
+
+function typesetMath(): void {
+  const root = container.value
+  const mathJax = (window as typeof window & { MathJax?: MathJaxController }).MathJax
+
+  if (!root || !mathJax?.typesetPromise) {
+    return
+  }
+
+  mathJax.typesetPromise([root]).catch((error: unknown) => {
+    console.warn('MathJax typeset failed', error)
+  })
+}
+
 function attachCopyButtons() {
   if (!container.value) {
     return
@@ -66,12 +81,16 @@ function attachCopyButtons() {
 watch(
   () => props.content,
   () => {
-    nextTick(() => attachCopyButtons())
+    nextTick(() => {
+      attachCopyButtons()
+      typesetMath()
+    })
   },
 )
 
 onMounted(() => {
   attachCopyButtons()
+  typesetMath()
 })
 </script>
 
