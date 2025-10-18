@@ -24,6 +24,7 @@
   --color-copy-button-text: #4338ca;
   --color-codeblock-text: #1f2933;
   --transition-fast: 0.2s ease;
+  --top-bar-height: 4.5rem;
 }
 
 [data-theme='dark'] {
@@ -89,6 +90,7 @@ a {
   display: flex;
   align-items: center;
   gap: 1rem;
+  min-height: var(--top-bar-height);
   padding: 0.75rem 1.75rem;
   background: var(--color-bg-surface);
   border-bottom: 1px solid var(--color-border);
@@ -142,6 +144,7 @@ a {
 .layout {
   flex: 1;
   display: flex;
+  align-items: flex-start;
   min-height: 0;
   transition: padding var(--transition-fast);
 }
@@ -153,6 +156,9 @@ a {
   background: var(--color-bg-sidebar);
   border-right: 1px solid var(--color-border);
   overflow-y: auto;
+  position: sticky;
+  top: calc(var(--top-bar-height) + 1rem);
+  max-height: calc(100vh - var(--top-bar-height) - 1.5rem);
   transition: width 0.24s ease, min-width 0.24s ease, padding 0.24s ease, background-color var(--transition-fast), border-color var(--transition-fast);
 }
 
@@ -177,7 +183,6 @@ a {
 .layout__content {
   flex: 1;
   padding: 2.5rem 3rem;
-  overflow-y: auto;
   background: var(--color-bg-surface);
   transition: background-color var(--transition-fast);
 }
@@ -427,6 +432,8 @@ a {
     min-height: auto;
     border-right: none;
     border-bottom: 1px solid var(--color-border);
+    position: static;
+    max-height: none;
   }
 
   .layout__sidebar.is-collapsed {
