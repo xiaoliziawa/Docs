@@ -6,12 +6,15 @@
     api: 'API',
     'api/reference': 'API 参考',
     examples: '示例',
-    'examples/custom-sidebar': '自定义侧边栏',
+    'examples/custom-sidebar': '自定义侧边栏示例',
+    document: '文章',
+    'document/text': "文章1"
   },
-  order: ['examples', 'api', 'guide'],
+  order: ['guide', 'api', 'examples', 'document'],
   childrenOrder: {
-    examples: ['examples/custom-sidebar'],
     guide: ['guide/introduction', 'guide/getting-started'],
-    api: ['api/reference']
+    api: ['api/reference'],
+    examples: ['examples/custom-sidebar'],
+    document: ['document/text']
   },
 }
