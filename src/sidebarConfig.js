@@ -1,20 +1,40 @@
 ﻿export default {
   labels: {
     guide: '指南',
-    'guide/introduction': '介绍',
-    'guide/getting-started': '快速开始',
+    'guide/introduction': '简介',
+    'guide/getting-started': '快速上手',
+    'guide/architecture': '架构专题',
+    'guide/architecture/overview': '架构概览',
+    'guide/architecture/patterns': '设计模式',
+    'guide/architecture/patterns/state-management': '状态管理',
+    'guide/architecture/patterns/state-management/fundamentals': '基础篇',
+    'guide/architecture/patterns/state-management/advanced': '进阶技巧',
+    'guide/architecture/patterns/rendering': '渲染策略',
+    'guide/architecture/patterns/rendering/performance': '性能优化',
     api: 'API',
     'api/reference': 'API 参考',
     examples: '示例',
     'examples/custom-sidebar': '自定义侧边栏示例',
-    document: '文章',
-    'document/text': "文章1"
+    document: '文档',
+    'document/text': '文章1',
   },
   order: ['guide', 'api', 'examples', 'document'],
   childrenOrder: {
-    guide: ['guide/introduction', 'guide/getting-started'],
+    guide: ['guide/introduction', 'guide/getting-started', 'guide/architecture'],
+    'guide/architecture': ['guide/architecture/overview', 'guide/architecture/patterns'],
+    'guide/architecture/patterns': [
+      'guide/architecture/patterns/state-management',
+      'guide/architecture/patterns/rendering',
+    ],
+    'guide/architecture/patterns/state-management': [
+      'guide/architecture/patterns/state-management/fundamentals',
+      'guide/architecture/patterns/state-management/advanced',
+    ],
+    'guide/architecture/patterns/rendering': [
+      'guide/architecture/patterns/rendering/performance',
+    ],
     api: ['api/reference'],
     examples: ['examples/custom-sidebar'],
-    document: ['document/text']
+    document: ['document/text'],
   },
 }

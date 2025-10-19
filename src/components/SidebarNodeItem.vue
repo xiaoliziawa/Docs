@@ -106,6 +106,9 @@ function handleSelect() {
   color: var(--color-text-secondary);
   cursor: pointer;
   border-radius: 0.5rem;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.4;
   transition: background-color var(--transition-fast), color var(--transition-fast);
 }
 
@@ -115,6 +118,11 @@ function handleSelect() {
   gap: 0.45rem;
   font-weight: 600;
   color: var(--color-text-primary);
+}
+
+.sidebar-item__label {
+  flex: 1;
+  word-break: break-word;
 }
 
 .sidebar-item__group:hover {

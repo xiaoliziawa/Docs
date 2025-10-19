@@ -22,9 +22,20 @@ const markdown = new MarkdownIt({
   .use(markdownItTaskLists, { label: true, labelAfter: true })
   .use(markdownItMathjax3)
 
+const escapeHtml = markdown.utils.escapeHtml
+
+function normalizeMarkdown(raw: string): string {
+  return raw.replace(/^\uFEFF/, '')
+}
+
+
 
 function renderCodeBlock(code: string, info?: string): string {
   const language = (info ?? '').trim()
+  if (language === 'mermaid') {
+    const safe = escapeHtml(code.trim())
+    return `<div class="mermaid">${safe}</div>`
+  }
   const validLanguage = language && hljs.getLanguage(language) ? language : ''
   const highlighted = validLanguage
     ? hljs.highlight(code, { language: validLanguage, ignoreIllegals: true }).value
@@ -89,7 +100,8 @@ export async function loadAllDocs(): Promise<{
   const docs: DocRecord[] = []
 
   for (const [path, loader] of Object.entries(markdownModules)) {
-    const raw = await loader()
+    const source = await loader()
+    const raw = normalizeMarkdown(source)
     const slug = path.replace('../docs/', '').replace(/\.md$/i, '')
     const section = slug.includes('/') ? slug.split('/')[0] : slug
     const title = extractTitle(raw) ?? deriveTitle(slug.split('/').pop() ?? slug)

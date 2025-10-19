@@ -37,6 +37,13 @@ async function handleCopy(button: HTMLButtonElement, text: string) {
 }
 
 type MathJaxController = { typesetPromise?: (elements?: (HTMLElement | string)[]) => Promise<unknown> }
+type MermaidApi = {
+  initialize?: (config?: Record<string, unknown>) => void
+  run?: (options: { nodes: Element[] }) => Promise<unknown> | void
+}
+
+let mermaidInitialized = false
+let mermaidRetryCount = 0
 
 function typesetMath(): void {
   const root = container.value
@@ -49,6 +56,41 @@ function typesetMath(): void {
   mathJax.typesetPromise([root]).catch((error: unknown) => {
     console.warn('MathJax typeset failed', error)
   })
+}
+
+function renderMermaid(): void {
+  const root = container.value
+  const mermaid = (window as typeof window & { mermaid?: MermaidApi }).mermaid
+
+  if (!root) {
+    return
+  }
+
+  if (!mermaid) {
+    if (mermaidRetryCount < 10) {
+      mermaidRetryCount += 1
+      window.setTimeout(renderMermaid, 150 * mermaidRetryCount)
+    }
+    return
+  }
+
+  mermaidRetryCount = 0
+
+  if (!mermaidInitialized && mermaid.initialize) {
+    mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' })
+    mermaidInitialized = true
+  }
+
+  const nodes = Array.from(root.querySelectorAll<HTMLElement>('.mermaid'))
+  if (nodes.length === 0 || !mermaid.run) {
+    return
+  }
+
+  try {
+    mermaid.run({ nodes })
+  } catch (error) {
+    console.warn('Mermaid render failed', error)
+  }
 }
 
 function attachCopyButtons() {
@@ -84,6 +126,7 @@ watch(
     nextTick(() => {
       attachCopyButtons()
       typesetMath()
+      renderMermaid()
     })
   },
 )
@@ -91,6 +134,7 @@ watch(
 onMounted(() => {
   attachCopyButtons()
   typesetMath()
+  renderMermaid()
 })
 </script>
 
