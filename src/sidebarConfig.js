@@ -1,4 +1,4 @@
-﻿export default {
+export default {
   labels: {
     guide: '指南',
     'guide/introduction': '简介',
@@ -17,6 +17,7 @@
     'examples/custom-sidebar': '自定义侧边栏示例',
     document: '文档',
     'document/text': '文章1',
+    'document/public_welfare_station': '公益站',
   },
   order: ['guide', 'api', 'examples', 'document'],
   childrenOrder: {
@@ -35,6 +36,6 @@
     ],
     api: ['api/reference'],
     examples: ['examples/custom-sidebar'],
-    document: ['document/text'],
+    document: ['document/text', 'document/public_welfare_station'],
   },
 }
