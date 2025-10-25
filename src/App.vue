@@ -4,7 +4,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import MarkdownViewer from './components/MarkdownViewer.vue'
 import SearchBar from './components/SearchBar.vue'
 import SidebarTree from './components/SidebarTree.vue'
-import type { DocRecord, SidebarGroupNode } from './docService'
+import type { DocRecord, SidebarGroupNode, SidebarNode } from './docService'
 import { loadAllDocs } from './docService'
 
 type ThemeMode = 'light' | 'dark'
@@ -30,6 +30,56 @@ const searchableDocs = computed(() =>
 
 const hasDocs = computed(() => docs.value.length > 0)
 const isDarkMode = computed(() => theme.value === 'dark')
+const orderedDocs = computed<DocRecord[]>(() => {
+  if (!sidebar.value.length || !docs.value.length) {
+    return [...docs.value]
+  }
+
+  const docMap = new Map(docs.value.map((doc) => [doc.slug, doc]))
+  const collected: DocRecord[] = []
+
+  const visit = (nodes: SidebarNode[]) => {
+    nodes.forEach((node) => {
+      if (node.type === 'doc') {
+        const match = docMap.get(node.slug)
+        if (match) {
+          collected.push(match)
+        }
+      } else {
+        visit(node.children)
+      }
+    })
+  }
+
+  sidebar.value.forEach((group) => visit(group.children))
+
+  return collected.length ? collected : [...docs.value]
+})
+
+const currentIndex = computed(() => {
+  const active = currentDoc.value
+  if (!active) {
+    return -1
+  }
+
+  return orderedDocs.value.findIndex((doc) => doc.slug === active.slug)
+})
+
+const previousDoc = computed<DocRecord | null>(() => {
+  if (currentIndex.value > 0) {
+    return orderedDocs.value[currentIndex.value - 1]
+  }
+
+  return null
+})
+
+const nextDoc = computed<DocRecord | null>(() => {
+  if (currentIndex.value >= 0 && currentIndex.value < orderedDocs.value.length - 1) {
+    return orderedDocs.value[currentIndex.value + 1]
+  }
+
+  return null
+})
 
 let cleanupHashListener: (() => void) | null = null
 let cleanupThemeListener: (() => void) | null = null
@@ -228,7 +278,33 @@ function handleThemeToggle(): void {
         />
       </aside>
       <main class="layout__content">
-        <MarkdownViewer v-if="currentDoc" :content="currentDoc.html" />
+        <div v-if="currentDoc" class="doc-view">
+          <MarkdownViewer :content="currentDoc.html" />
+          <nav
+            v-if="previousDoc || nextDoc"
+            class="doc-pager"
+            aria-label="Document navigation"
+          >
+            <button
+              v-if="previousDoc"
+              type="button"
+              class="doc-pager__item doc-pager__item--previous"
+              @click="selectDoc(previousDoc.slug)"
+            >
+              <span class="doc-pager__hint">Previous page</span>
+              <span class="doc-pager__title">{{ previousDoc.title }}</span>
+            </button>
+            <button
+              v-if="nextDoc"
+              type="button"
+              class="doc-pager__item doc-pager__item--next"
+              @click="selectDoc(nextDoc.slug)"
+            >
+              <span class="doc-pager__hint">Next page</span>
+              <span class="doc-pager__title">{{ nextDoc.title }}</span>
+            </button>
+          </nav>
+        </div>
         <div v-else class="empty-state">请选择左侧的文档查看内容。</div>
       </main>
     </div>

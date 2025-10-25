@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   color-scheme: light;
   font-size: 16px;
   --color-bg-body: #f3f4f6;
@@ -215,6 +215,72 @@ a {
   background: var(--color-card);
   transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
 }
+
+.doc-view {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.doc-pager {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.doc-pager__item {
+  flex: 1 1 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  align-items: flex-start;
+  padding: 1.15rem 1.35rem;
+  border-radius: 1rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-surface);
+  color: var(--color-text-primary);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast), background-color var(--transition-fast);
+}
+
+.doc-pager__item:hover {
+  border-color: var(--color-accent);
+  box-shadow: 0 12px 32px var(--color-shadow);
+  transform: translateY(-2px);
+  background: rgba(99, 102, 241, 0.08);
+}
+
+[data-theme='dark'] .doc-pager__item:hover {
+  background: rgba(129, 140, 248, 0.18);
+}
+
+.doc-pager__item:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.doc-pager__hint {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-secondary);
+}
+
+.doc-pager__title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-accent-strong);
+  word-break: break-word;
+}
+
+.doc-pager__item--next {
+  margin-left: auto;
+  align-items: flex-end;
+  text-align: right;
+}
+
 
 .markdown {
   max-width: 860px;
@@ -603,5 +669,3 @@ a {
 .hljs-strong {
   font-weight: 600;
 }
-
-
