@@ -126,8 +126,8 @@ function handleSelect() {
 }
 
 .sidebar-item__group:hover {
-  background: linear-gradient(120deg, rgba(255, 198, 213, 0.5), rgba(210, 187, 255, 0.5));
-  color: var(--color-accent-strong);
+  background: var(--color-toolbar-hover);
+  color: var(--color-accent);
 }
 
 .sidebar-item__link {
@@ -136,21 +136,19 @@ function handleSelect() {
 }
 
 .sidebar-item__link:hover {
-  background: linear-gradient(120deg, rgba(255, 198, 213, 0.55), rgba(210, 187, 255, 0.52));
-  color: var(--color-accent-strong);
+  background: var(--color-toolbar-hover);
+  color: var(--color-accent);
 }
 
 .sidebar-item__link.is-active {
-  background: linear-gradient(135deg, rgba(255, 125, 138, 0.8), rgba(182, 155, 255, 0.78));
-  color: #fff;
+  background: var(--color-accent);
+  color: #ffffff;
   font-weight: 600;
-  box-shadow: 0 12px 24px rgba(187, 160, 255, 0.28);
 }
 
 [data-theme='dark'] .sidebar-item__link.is-active {
-  background: linear-gradient(135deg, rgba(94, 234, 212, 0.35), rgba(83, 180, 255, 0.32));
-  color: var(--color-text-primary);
-  box-shadow: 0 12px 24px rgba(41, 95, 143, 0.35);
+  background: var(--color-accent);
+  color: #ffffff;
 }
 
 .sidebar-item__caret {
