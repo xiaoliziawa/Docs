@@ -191,17 +191,30 @@ function handleKeydown(event: KeyboardEvent) {
   position: relative;
   display: flex;
   align-items: center;
-  background: var(--color-card);
-  border: 1px solid var(--color-border);
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.92), rgba(251, 233, 255, 0.92));
+  border: 1px solid rgba(191, 168, 255, 0.35);
   border-radius: 999px;
-  padding: 0.45rem 0.85rem 0.45rem 2.25rem;
-  transition: border-color var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast);
+  padding: 0.5rem 0.9rem 0.5rem 2.35rem;
+  box-shadow: 0 12px 24px rgba(140, 108, 214, 0.12);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background 0.3s ease;
 }
 
 .search-bar__input-wrapper:focus-within {
-  background: var(--color-bg-surface);
-  border-color: rgba(99, 102, 241, 0.4);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  background: linear-gradient(120deg, rgba(255, 208, 224, 0.95), rgba(210, 187, 255, 0.88));
+  border-color: rgba(255, 125, 138, 0.6);
+  box-shadow: 0 0 0 3px rgba(255, 160, 196, 0.35);
+}
+
+[data-theme='dark'] .search-bar__input-wrapper {
+  background: linear-gradient(120deg, rgba(17, 32, 52, 0.92), rgba(11, 24, 44, 0.85));
+  border: 1px solid rgba(63, 111, 178, 0.4);
+  box-shadow: 0 12px 24px rgba(5, 16, 38, 0.65);
+}
+
+[data-theme='dark'] .search-bar__input-wrapper:focus-within {
+  background: linear-gradient(120deg, rgba(25, 50, 70, 0.95), rgba(22, 33, 66, 0.9));
+  border-color: rgba(94, 234, 212, 0.45);
+  box-shadow: 0 0 0 3px rgba(72, 196, 255, 0.35);
 }
 
 .search-bar__icon {
