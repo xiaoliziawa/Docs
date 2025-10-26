@@ -1,3 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+.layout__content::-webkit-scrollbar,
+.layout__sidebar::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 10px;
+}
+
+.layout__content::-webkit-scrollbar-track,
+.layout__sidebar::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.layout__content::-webkit-scrollbar-thumb,
+.layout__sidebar::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+  background-image: linear-gradient(180deg, #ff9fb8, #b69bff);
+  border-radius: 999px;
+  border: 3px solid rgba(0, 0, 0, 0);
+  background-clip: padding-box;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme='dark'] .layout__content::-webkit-scrollbar-thumb,
+[data-theme='dark'] .layout__sidebar::-webkit-scrollbar-thumb,
+[data-theme='dark'] body::-webkit-scrollbar-thumb {
+  background-image: linear-gradient(180deg, #5eead4, #48d8ff);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+}
+
 :root {
   color-scheme: light;
   font-size: 16px;
@@ -18,11 +49,11 @@
   --color-toolbar-surface: rgba(255, 255, 255, 0.75);
   --color-toolbar-shadow: rgba(255, 166, 201, 0.28);
   --color-toolbar-hover: rgba(255, 198, 213, 0.32);
-  --color-codeblock-bg: rgba(250, 241, 255, 0.9);
-  --color-codeblock-border: rgba(205, 181, 255, 0.45);
+  --color-codeblock-bg: rgba(27, 28, 49, 0.95);
+  --color-codeblock-border: rgba(28, 30, 64, 0.9);
   --color-copy-button-bg: rgba(255, 125, 154, 0.2);
   --color-copy-button-text: #c62468;
-  --color-codeblock-text: #3a2a66;
+  --color-codeblock-text: #e1e6ff;
   --transition-fast: 0.2s ease;
   --top-bar-height: 4.5rem;
   --backdrop-blur: 18px;
@@ -39,7 +70,7 @@
   --color-divider: rgba(86, 123, 189, 0.28);
   --color-shadow: rgba(5, 16, 38, 0.72);
   --color-card: rgba(16, 26, 44, 0.86);
-  --color-code-bg: rgba(69, 215, 213, 0.22);
+  --color-code-bg: rgba(12, 28, 46, 0.85);
   --color-code: #5fe3ff;
   --color-accent: #5eead4;
   --color-accent-strong: #48d8ff;
@@ -47,11 +78,11 @@
   --color-toolbar-surface: rgba(11, 21, 37, 0.82);
   --color-toolbar-shadow: rgba(56, 203, 255, 0.24);
   --color-toolbar-hover: rgba(64, 196, 255, 0.24);
-  --color-codeblock-bg: rgba(10, 26, 45, 0.92);
-  --color-codeblock-border: rgba(63, 111, 178, 0.4);
+  --color-codeblock-bg: rgba(7, 12, 25, 0.96);
+  --color-codeblock-border: rgba(33, 57, 94, 0.8);
   --color-copy-button-bg: rgba(76, 201, 240, 0.16);
   --color-copy-button-text: #7cf5ff;
-  --color-codeblock-text: #d2f3ff;
+  --color-codeblock-text: #f0faff;
   --backdrop-blur: 24px;
 }
 
@@ -236,24 +267,6 @@ a {
   padding-left: 2rem;
 }
 
-.layout__content::-webkit-scrollbar,
-.layout__sidebar::-webkit-scrollbar {
-  width: 8px;
-}
-
-.layout__content::-webkit-scrollbar-thumb,
-.layout__sidebar::-webkit-scrollbar-thumb {
-  background-color: var(--color-scrollbar-thumb);
-  border-radius: 999px;
-  border: 2px solid transparent;
-  background-clip: content-box;
-}
-
-.layout__content::-webkit-scrollbar-track,
-.layout__sidebar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
 .empty-state {
   padding: 3rem;
   color: var(--color-text-secondary);
@@ -425,12 +438,18 @@ a {
 }
 
 .markdown code {
-  background: var(--color-code-bg);
-  color: var(--color-code);
+  background: rgba(33, 34, 60, 0.85);
+  color: #f3b7ff;
   border-radius: 0.375rem;
   padding: 0.15rem 0.4rem;
   font-size: 0.95rem;
+  font-family: 'JetBrains Mono', monospace;
   transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+[data-theme='dark'] .markdown code {
+  background: rgba(12, 21, 36, 0.92);
+  color: #7df5ff;
 }
 
 .markdown pre {
@@ -438,16 +457,23 @@ a {
   margin: 1.5rem 0;
   background: var(--color-codeblock-bg);
   color: var(--color-codeblock-text);
-  border-radius: 0.75rem;
+  border-radius: 1rem;
   border: 1px solid var(--color-codeblock-border);
   overflow: hidden;
-  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+  box-shadow: inset 0 0 16px rgba(4, 8, 20, 0.45);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color var(--transition-fast);
+}
+
+.markdown pre:hover {
+  transform: translateY(-2px);
+  box-shadow: inset 0 0 22px rgba(6, 12, 28, 0.6);
 }
 
 .markdown pre code {
   display: block;
   padding: 1.25rem 1.5rem;
   font-size: 0.95rem;
+  font-family: 'JetBrains Mono', monospace;
   overflow-x: auto;
   background: transparent !important;
   color: inherit !important;
@@ -634,7 +660,7 @@ a {
 
 [data-theme='light'] .hljs-comment,
 [data-theme='light'] .hljs-quote {
-  color: #9ca3af;
+  color: #9ba3c5;
   font-style: italic;
 }
 
@@ -642,7 +668,8 @@ a {
 [data-theme='light'] .hljs-selector-tag,
 [data-theme='light'] .hljs-built_in,
 [data-theme='light'] .hljs-doctag {
-  color: #7c3aed;
+  color: #7f4bff;
+  font-weight: 600;
 }
 
 [data-theme='light'] .hljs-string,
@@ -650,40 +677,40 @@ a {
 [data-theme='light'] .hljs-template-variable,
 [data-theme='light'] .hljs-attr,
 [data-theme='light'] .hljs-variable {
-  color: #0f766e;
+  color: #17a05f;
 }
 
 [data-theme='light'] .hljs-number,
 [data-theme='light'] .hljs-literal,
 [data-theme='light'] .hljs-symbol,
 [data-theme='light'] .hljs-bullet {
-  color: #d97706;
+  color: #f97316;
 }
 
 [data-theme='light'] .hljs-title,
 [data-theme='light'] .hljs-section,
 [data-theme='light'] .hljs-function .hljs-title {
-  color: #2563eb;
+  color: #2563ff;
 }
 
 [data-theme='light'] .hljs-attribute,
 [data-theme='light'] .hljs-selector-id,
 [data-theme='light'] .hljs-selector-class {
-  color: #d946ef;
+  color: #e255ff;
 }
 
 [data-theme='light'] .hljs-meta,
 [data-theme='light'] .hljs-meta .hljs-keyword {
-  color: #ec4899;
+  color: #f472b6;
 }
 
 [data-theme='light'] .hljs-params {
-  color: #475569;
+  color: #3f4960;
 }
 
 [data-theme='dark'] .hljs-comment,
 [data-theme='dark'] .hljs-quote {
-  color: #94a3b8;
+  color: #7f8bab;
   font-style: italic;
 }
 
@@ -691,7 +718,8 @@ a {
 [data-theme='dark'] .hljs-selector-tag,
 [data-theme='dark'] .hljs-built_in,
 [data-theme='dark'] .hljs-doctag {
-  color: #c4b5fd;
+  color: #aeb8ff;
+  font-weight: 600;
 }
 
 [data-theme='dark'] .hljs-string,
@@ -699,35 +727,35 @@ a {
 [data-theme='dark'] .hljs-template-variable,
 [data-theme='dark'] .hljs-attr,
 [data-theme='dark'] .hljs-variable {
-  color: #5eead4;
+  color: #4ef6a9;
 }
 
 [data-theme='dark'] .hljs-number,
 [data-theme='dark'] .hljs-literal,
 [data-theme='dark'] .hljs-symbol,
 [data-theme='dark'] .hljs-bullet {
-  color: #fcd34d;
+  color: #facc15;
 }
 
 [data-theme='dark'] .hljs-title,
 [data-theme='dark'] .hljs-section,
 [data-theme='dark'] .hljs-function .hljs-title {
-  color: #93c5fd;
+  color: #7ab8ff;
 }
 
 [data-theme='dark'] .hljs-attribute,
 [data-theme='dark'] .hljs-selector-id,
 [data-theme='dark'] .hljs-selector-class {
-  color: #f472b6;
+  color: #ff96d5;
 }
 
 [data-theme='dark'] .hljs-meta,
 [data-theme='dark'] .hljs-meta .hljs-keyword {
-  color: #f472b6;
+  color: #ff85c7;
 }
 
 [data-theme='dark'] .hljs-params {
-  color: #cbd5f5;
+  color: #9fb3d8;
 }
 
 .hljs-emphasis {
