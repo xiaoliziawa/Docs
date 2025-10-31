@@ -141,3 +141,37 @@ onMounted(() => {
 <template>
   <article ref="container" class="markdown" v-html="props.content"></article>
 </template>
+
+<style scoped>
+/* 移动端优化 */
+@media (max-width: 640px) {
+  .markdown :deep(img) {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .markdown :deep(.mermaid) {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .markdown :deep(ul),
+  .markdown :deep(ol) {
+    margin-left: 1.2rem;
+  }
+
+  .markdown :deep(blockquote) {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .markdown :deep(ul),
+  .markdown :deep(ol) {
+    margin-left: 1rem;
+  }
+}
+</style>

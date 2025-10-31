@@ -109,7 +109,15 @@ function handleSelect() {
   white-space: normal;
   word-break: break-word;
   line-height: 1.4;
-  transition: background-color var(--transition-fast), color var(--transition-fast);
+  transition: background-color var(--transition-fast), color var(--transition-fast), transform 0.1s ease;
+  /* 移动端触摸优化 */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.sidebar-item__group:active,
+.sidebar-item__link:active {
+  transform: scale(0.98);
 }
 
 .sidebar-item__group {
@@ -179,5 +187,43 @@ function handleSelect() {
 .accordion-leave-to {
   opacity: 0;
   transform: translateY(-4px);
+}
+
+/* 移动端优化 */
+@media (max-width: 640px) {
+  .sidebar-item__group,
+  .sidebar-item__link {
+    padding: 0.5rem 0.45rem;
+    font-size: 0.9rem;
+    min-height: 44px; /* 确保足够的触摸区域 */
+    display: flex;
+    align-items: center;
+  }
+
+  .sidebar-item__link {
+    padding-left: 1.4rem;
+  }
+
+  .sidebar-item__caret {
+    width: 0.6rem;
+    height: 0.6rem;
+  }
+
+  .sidebar-item__children {
+    margin: 0.25rem 0 0.25rem 0.25rem;
+    padding-left: 0.6rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .sidebar-item__group,
+  .sidebar-item__link {
+    padding: 0.45rem 0.4rem;
+    font-size: 0.85rem;
+  }
+
+  .sidebar-item__link {
+    padding-left: 1.2rem;
+  }
 }
 </style>

@@ -254,7 +254,14 @@ function handleKeydown(event: KeyboardEvent) {
   text-align: left;
   cursor: pointer;
   color: var(--color-text-primary);
-  transition: color var(--transition-fast), background-color var(--transition-fast);
+  transition: color var(--transition-fast), background-color var(--transition-fast), transform 0.1s ease;
+  /* 移动端触摸优化 */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.search-bar__result button:active {
+  transform: scale(0.98);
 }
 
 .search-bar__result-title {
@@ -294,10 +301,56 @@ function handleKeydown(event: KeyboardEvent) {
   opacity: 0;
 }
 
+@media (max-width: 960px) {
+  .search-bar {
+    width: 100%;
+  }
+}
+
 @media (max-width: 720px) {
   .search-bar__results {
     right: auto;
-    width: calc(100vw - 3rem);
+    width: calc(100vw - 2.5rem);
+    max-height: 280px;
+  }
+
+  .search-bar__input-wrapper {
+    padding: 0.45rem 0.8rem 0.45rem 2.2rem;
+  }
+
+  .search-bar__icon {
+    left: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .search-bar__input {
+    font-size: 0.9rem;
+  }
+
+  .search-bar__result button {
+    padding: 0.55rem 0.85rem;
+  }
+
+  .search-bar__result-title {
+    font-size: 0.9rem;
+  }
+
+  .search-bar__result-snippet {
+    font-size: 0.78rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .search-bar__results {
+    width: calc(100vw - 1.5rem);
+  }
+
+  .search-bar__input-wrapper {
+    padding: 0.4rem 0.7rem 0.4rem 2rem;
+  }
+
+  .search-bar__icon {
+    left: 0.65rem;
   }
 }
 </style>

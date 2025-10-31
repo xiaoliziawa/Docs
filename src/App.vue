@@ -106,6 +106,8 @@ function selectDoc(slug: string): void {
   updateHash(doc.slug)
   if (window.innerWidth <= 960) {
     sidebarCollapsed.value = true
+    // 移动端选择文档后滚动到顶部
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 }
 
