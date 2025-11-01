@@ -2,8 +2,12 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 import MarkdownViewer from './components/MarkdownViewer.vue'
+import ReadingProgress from './components/ReadingProgress.vue'
 import SearchBar from './components/SearchBar.vue'
 import SidebarTree from './components/SidebarTree.vue'
+import TableOfContents from './components/TableOfContents.vue'
+import { useDocHistory } from './composables/useDocHistory'
+import { useKeyboardShortcuts } from './composables/useKeyboardShortcuts'
 import type { DocRecord, SidebarGroupNode, SidebarNode } from './docService'
 import { loadAllDocs } from './docService'
 
@@ -19,6 +23,52 @@ const toolbarOpen = ref(false)
 const theme = ref<ThemeMode>('light')
 
 const themeStorageKey = 'docs-theme'
+
+// Document history
+const currentSlug = computed(() => currentDoc.value?.slug || '')
+const currentTitle = computed(() => currentDoc.value?.title || '')
+const { history: docHistory, clearHistory } = useDocHistory(
+  currentSlug.value,
+  currentTitle.value
+)
+
+// Keyboard shortcuts
+useKeyboardShortcuts([
+  {
+    key: 'k',
+    ctrl: true,
+    meta: true,
+    handler: () => {
+      const searchInput = document.querySelector('.search-bar__input') as HTMLInputElement
+      if (searchInput) {
+        searchInput.focus()
+      }
+    },
+    description: 'Focus search'
+  },
+  {
+    key: 'b',
+    ctrl: true,
+    meta: true,
+    handler: () => toggleSidebar(),
+    description: 'Toggle sidebar'
+  },
+  {
+    key: 'd',
+    ctrl: true,
+    meta: true,
+    handler: () => toggleThemeMode(),
+    description: 'Toggle theme'
+  },
+  {
+    key: 'Escape',
+    handler: () => {
+      searchQuery.value = ''
+      toolbarOpen.value = false
+    },
+    description: 'Close search/toolbar'
+  }
+])
 
 const searchableDocs = computed(() =>
   docs.value.map((doc) => ({
@@ -243,6 +293,7 @@ function handleThemeToggle(): void {
 
 <template>
   <div class="app-shell">
+    <ReadingProgress />
     <header class="top-bar">
       <div class="top-bar__brand">
         <img src="/favicon.svg" alt="" class="top-bar__logo" />
@@ -281,6 +332,7 @@ function handleThemeToggle(): void {
       </aside>
       <main class="layout__content">
         <div v-if="currentDoc" class="doc-view">
+          <TableOfContents v-if="currentDoc" :content="currentDoc.html" />
           <MarkdownViewer :content="currentDoc.html" />
           <nav
             v-if="previousDoc || nextDoc"

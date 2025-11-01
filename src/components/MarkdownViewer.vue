@@ -120,10 +120,26 @@ function attachCopyButtons() {
   })
 }
 
+function addHeadingIds() {
+  if (!container.value) {
+    return
+  }
+
+  const root = container.value
+  const headings = root.querySelectorAll('h1, h2, h3, h4, h5, h6')
+  
+  headings.forEach((heading: Element, index: number) => {
+    if (!heading.id) {
+      heading.id = `heading-${index}`
+    }
+  })
+}
+
 watch(
   () => props.content,
   () => {
     nextTick(() => {
+      addHeadingIds()
       attachCopyButtons()
       typesetMath()
       renderMermaid()
@@ -132,6 +148,7 @@ watch(
 )
 
 onMounted(() => {
+  addHeadingIds()
   attachCopyButtons()
   typesetMath()
   renderMermaid()
