@@ -1,7 +1,10 @@
 ﻿<script setup lang="ts">
 import { nextTick, onMounted, ref, watch } from 'vue'
 
-const props = defineProps<{ content: string }>()
+const props = defineProps<{
+  content: string
+  highlightKeyword?: string
+}>()
 
 const container = ref<HTMLElement | null>(null)
 
@@ -127,13 +130,114 @@ function addHeadingIds() {
 
   const root = container.value
   const headings = root.querySelectorAll('h1, h2, h3, h4, h5, h6')
-  
+
   headings.forEach((heading: Element, index: number) => {
     if (!heading.id) {
       heading.id = `heading-${index}`
     }
   })
 }
+
+function clearHighlights() {
+  if (!container.value) {
+    return
+  }
+
+  const root = container.value
+  const marks = root.querySelectorAll('mark.search-highlight')
+  marks.forEach((mark) => {
+    const parent = mark.parentNode
+    if (parent) {
+      parent.replaceChild(document.createTextNode(mark.textContent || ''), mark)
+      parent.normalize()
+    }
+  })
+}
+
+function highlightText(keyword: string) {
+  if (!container.value || !keyword) {
+    return
+  }
+
+  const root = container.value
+  const walker = document.createTreeWalker(
+    root,
+    NodeFilter.SHOW_TEXT,
+    {
+      acceptNode: (node) => {
+        const parent = node.parentElement
+        if (!parent) return NodeFilter.FILTER_REJECT
+        const tagName = parent.tagName.toLowerCase()
+        if (['script', 'style', 'code', 'pre', 'mark'].includes(tagName)) {
+          return NodeFilter.FILTER_REJECT
+        }
+        return NodeFilter.FILTER_ACCEPT
+      }
+    }
+  )
+
+  const textNodes: Text[] = []
+  let node: Node | null
+  while ((node = walker.nextNode())) {
+    textNodes.push(node as Text)
+  }
+
+  const regex = new RegExp(`(${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
+  let firstMatch: HTMLElement | null = null
+
+  textNodes.forEach((textNode) => {
+    const text = textNode.textContent || ''
+    if (!regex.test(text)) {
+      return
+    }
+    regex.lastIndex = 0
+
+    const fragment = document.createDocumentFragment()
+    let lastIndex = 0
+    let match: RegExpExecArray | null
+
+    while ((match = regex.exec(text)) !== null) {
+      if (match.index > lastIndex) {
+        fragment.appendChild(document.createTextNode(text.slice(lastIndex, match.index)))
+      }
+
+      const mark = document.createElement('mark')
+      mark.className = 'search-highlight'
+      mark.textContent = match[1]
+      fragment.appendChild(mark)
+
+      if (!firstMatch) {
+        firstMatch = mark
+      }
+
+      lastIndex = regex.lastIndex
+    }
+
+    if (lastIndex < text.length) {
+      fragment.appendChild(document.createTextNode(text.slice(lastIndex)))
+    }
+
+    textNode.parentNode?.replaceChild(fragment, textNode)
+  })
+
+  if (firstMatch) {
+    setTimeout(() => {
+      firstMatch?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }, 100)
+  }
+}
+
+watch(
+  () => props.highlightKeyword,
+  (keyword) => {
+    nextTick(() => {
+      clearHighlights()
+      if (keyword) {
+        highlightText(keyword)
+      }
+    })
+  }
+)
 
 watch(
   () => props.content,

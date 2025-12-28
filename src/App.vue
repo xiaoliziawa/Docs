@@ -12,17 +12,21 @@ import type { DocRecord, SidebarGroupNode, SidebarNode } from './docService'
 import { loadAllDocs } from './docService'
 
 type ThemeMode = 'light' | 'dark'
+type FontSize = 'small' | 'medium' | 'large'
 
 const docs = ref<DocRecord[]>([])
 const sidebar = ref<SidebarGroupNode[]>([])
 const currentDoc = ref<DocRecord | null>(null)
 const searchQuery = ref('')
+const highlightKeyword = ref('')
 const isLoading = ref(true)
 const sidebarCollapsed = ref(false)
 const toolbarOpen = ref(false)
 const theme = ref<ThemeMode>('light')
+const fontSize = ref<FontSize>('medium')
 
 const themeStorageKey = 'docs-theme'
+const fontSizeStorageKey = 'docs-font-size'
 
 // Document history
 const currentSlug = computed(() => currentDoc.value?.slug || '')
@@ -145,13 +149,14 @@ function updateHash(slug: string): void {
   }
 }
 
-function selectDoc(slug: string): void {
+function selectDoc(slug: string, keyword?: string): void {
   const doc = findDoc(slug)
   if (!doc) {
     return
   }
 
   currentDoc.value = doc
+  highlightKeyword.value = keyword || ''
   searchQuery.value = ''
   updateHash(doc.slug)
   if (window.innerWidth <= 960) {
@@ -187,6 +192,11 @@ function initializeTheme(): void {
     theme.value = storedTheme
   } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
     theme.value = 'dark'
+  }
+
+  const storedFontSize = window.localStorage.getItem(fontSizeStorageKey)
+  if (storedFontSize === 'small' || storedFontSize === 'medium' || storedFontSize === 'large') {
+    fontSize.value = storedFontSize
   }
 
   const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
@@ -289,6 +299,80 @@ function handleThemeToggle(): void {
   toggleThemeMode()
   closeToolbar()
 }
+
+function cycleFontSize(): void {
+  const sizes: FontSize[] = ['small', 'medium', 'large']
+  const currentIndex = sizes.indexOf(fontSize.value)
+  fontSize.value = sizes[(currentIndex + 1) % sizes.length]
+}
+
+function handleFontSizeToggle(): void {
+  cycleFontSize()
+  closeToolbar()
+}
+
+const fontSizeLabel = computed(() => {
+  const labels: Record<FontSize, string> = {
+    small: '小',
+    medium: '中',
+    large: '大'
+  }
+  return labels[fontSize.value]
+})
+
+watch(
+  () => fontSize.value,
+  (size) => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.setAttribute('data-font-size', size)
+    }
+
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(fontSizeStorageKey, size)
+    }
+  },
+  { immediate: true }
+)
+
+function exportAsMarkdown(): void {
+  if (!currentDoc.value) {
+    return
+  }
+
+  const blob = new Blob([currentDoc.value.raw], { type: 'text/markdown;charset=utf-8' })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = `${currentDoc.value.title}.md`
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
+  closeToolbar()
+}
+
+async function copyMarkdown(): Promise<void> {
+  if (!currentDoc.value) {
+    return
+  }
+
+  try {
+    await navigator.clipboard.writeText(currentDoc.value.raw)
+    alert('Markdown 已复制到剪贴板')
+  } catch (error) {
+    console.warn('Copy failed', error)
+    const textarea = document.createElement('textarea')
+    textarea.value = currentDoc.value.raw
+    textarea.style.position = 'fixed'
+    textarea.style.left = '-9999px'
+    document.body.appendChild(textarea)
+    textarea.select()
+    document.execCommand('copy')
+    document.body.removeChild(textarea)
+    alert('Markdown 已复制到剪贴板')
+  }
+  closeToolbar()
+}
 </script>
 
 <template>
@@ -315,7 +399,7 @@ function handleThemeToggle(): void {
         :model-value="searchQuery"
         placeholder="搜索文档..."
         @update:model-value="(value) => (searchQuery = value)"
-        @select="selectDoc"
+        @select="(slug, keyword) => selectDoc(slug, keyword)"
       />
     </header>
 
@@ -333,7 +417,34 @@ function handleThemeToggle(): void {
       <main class="layout__content">
         <div v-if="currentDoc" class="doc-view">
           <TableOfContents v-if="currentDoc" :content="currentDoc.html" />
-          <MarkdownViewer :content="currentDoc.html" />
+          <div class="doc-meta">
+            <span class="doc-meta__reading-time">
+              <svg class="doc-meta__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              {{ currentDoc.readingTime }} 分钟阅读
+            </span>
+            <span class="doc-meta__word-count">
+              <svg class="doc-meta__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+              </svg>
+              {{ currentDoc.wordCount }} 字
+            </span>
+            <span v-if="currentDoc.lastUpdated" class="doc-meta__last-updated">
+              <svg class="doc-meta__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+              更新于 {{ currentDoc.lastUpdated }}
+            </span>
+          </div>
+          <MarkdownViewer :content="currentDoc.html" :highlight-keyword="highlightKeyword" />
           <nav
             v-if="previousDoc || nextDoc"
             class="doc-pager"
@@ -377,6 +488,15 @@ function handleThemeToggle(): void {
       <div class="floating-toolbar__actions" :class="{ 'is-open': toolbarOpen }">
         <button type="button" class="floating-toolbar__action" @click="handleThemeToggle">
           {{ isDarkMode ? '切换到亮色模式' : '切换到夜间模式' }}
+        </button>
+        <button type="button" class="floating-toolbar__action" @click="handleFontSizeToggle">
+          字体大小: {{ fontSizeLabel }}
+        </button>
+        <button v-if="currentDoc" type="button" class="floating-toolbar__action" @click="exportAsMarkdown">
+          下载 Markdown
+        </button>
+        <button v-if="currentDoc" type="button" class="floating-toolbar__action" @click="copyMarkdown">
+          复制 Markdown
         </button>
         <button type="button" class="floating-toolbar__action" @click="scrollToTop">
           返回顶部

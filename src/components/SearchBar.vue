@@ -1,5 +1,6 @@
 ﻿<script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import { useSearchHistory } from '../composables/useSearchHistory'
 
 interface SearchDoc {
   slug: string
@@ -15,8 +16,10 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (event: 'update:modelValue', value: string): void
-  (event: 'select', slug: string): void
+  (event: 'select', slug: string, keyword: string): void
 }>()
+
+const { history, addToHistory, removeFromHistory, clearHistory } = useSearchHistory()
 
 const isFocused = ref(false)
 const keyboardIndex = ref(-1)
@@ -54,7 +57,8 @@ const filteredResults = computed(() => {
     .slice(0, 8)
 })
 
-const showDropdown = computed(() => isFocused.value && query.value.trim().length > 0)
+const showDropdown = computed(() => isFocused.value && (query.value.trim().length > 0 || history.value.length > 0))
+const showHistory = computed(() => isFocused.value && query.value.trim().length === 0 && history.value.length > 0)
 
 watch(
   () => query.value,
@@ -114,9 +118,23 @@ function submitCurrent() {
 }
 
 function select(entry: { slug: string }): void {
-  emit('select', entry.slug)
+  addToHistory(query.value.trim())
+  emit('select', entry.slug, query.value.trim())
   isFocused.value = false
   keyboardIndex.value = -1
+}
+
+function useHistoryItem(historyQuery: string): void {
+  query.value = historyQuery
+}
+
+function removeHistoryItem(event: Event, historyQuery: string): void {
+  event.stopPropagation()
+  removeFromHistory(historyQuery)
+}
+
+function handleClearHistory(): void {
+  clearHistory()
 }
 
 function handleKeydown(event: KeyboardEvent) {
@@ -163,7 +181,34 @@ function handleKeydown(event: KeyboardEvent) {
     </div>
     <transition name="fade">
       <ul v-if="showDropdown" class="search-bar__results">
-        <template v-if="filteredResults.length">
+        <template v-if="showHistory">
+          <li class="search-bar__history-header">
+            <span>搜索历史</span>
+            <button type="button" class="search-bar__clear-history" @mousedown.prevent @click="handleClearHistory">
+              清除
+            </button>
+          </li>
+          <li
+            v-for="item in history"
+            :key="item.query"
+            class="search-bar__result search-bar__history-item"
+          >
+            <button type="button" @mousedown.prevent @click="useHistoryItem(item.query)">
+              <span class="search-bar__history-icon">🕐</span>
+              <span class="search-bar__result-title">{{ item.query }}</span>
+            </button>
+            <button
+              type="button"
+              class="search-bar__remove-history"
+              @mousedown.prevent
+              @click="(e) => removeHistoryItem(e, item.query)"
+              aria-label="删除此记录"
+            >
+              ✕
+            </button>
+          </li>
+        </template>
+        <template v-else-if="filteredResults.length">
           <li
             v-for="(entry, index) in filteredResults"
             :key="entry.slug"
@@ -175,7 +220,7 @@ function handleKeydown(event: KeyboardEvent) {
             </button>
           </li>
         </template>
-        <li v-else class="search-bar__empty">未找到匹配的文档</li>
+        <li v-else-if="!showHistory" class="search-bar__empty">未找到匹配的文档</li>
       </ul>
     </transition>
   </div>
@@ -289,6 +334,74 @@ function handleKeydown(event: KeyboardEvent) {
 .search-bar__empty {
   padding: 0.75rem 1rem;
   color: var(--color-text-secondary);
+}
+
+.search-bar__history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.search-bar__clear-history {
+  background: none;
+  border: none;
+  color: var(--color-accent);
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  transition: background-color var(--transition-fast);
+}
+
+.search-bar__clear-history:hover {
+  background: var(--color-toolbar-hover);
+}
+
+.search-bar__history-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-bar__history-item button:first-child {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.search-bar__history-icon {
+  font-size: 0.85rem;
+  opacity: 0.6;
+}
+
+.search-bar__remove-history {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  font-size: 0.7rem;
+  cursor: pointer;
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.25rem;
+  opacity: 0;
+  transition: opacity var(--transition-fast), background-color var(--transition-fast);
+}
+
+.search-bar__history-item:hover .search-bar__remove-history {
+  opacity: 1;
+}
+
+.search-bar__remove-history:hover {
+  background: var(--color-toolbar-hover);
+  color: var(--color-accent);
 }
 
 .fade-enter-active,
