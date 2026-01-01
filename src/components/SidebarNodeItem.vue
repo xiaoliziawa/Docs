@@ -100,19 +100,19 @@ function handleSelect() {
   width: 100%;
   background: transparent;
   border: none;
-  padding: 0.45rem 0.5rem 0.45rem 0.5rem;
+  padding: 0.5rem 0.75rem;
   text-align: left;
   font: inherit;
   color: var(--color-text-secondary);
   cursor: pointer;
-  border-radius: 0.5rem;
+  border-radius: var(--border-radius-sm, 0.5rem);
   white-space: normal;
   word-break: break-word;
-  line-height: 1.4;
-  transition: background-color var(--transition-fast), color var(--transition-fast), transform 0.1s ease;
-  /* 移动端触摸优化 */
+  line-height: 1.45;
+  transition: all var(--transition-fast, 0.15s ease);
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+  position: relative;
 }
 
 .sidebar-item__group:active,
@@ -123,9 +123,10 @@ function handleSelect() {
 .sidebar-item__group {
   display: flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.5rem;
   font-weight: 600;
   color: var(--color-text-primary);
+  margin-bottom: 0.25rem;
 }
 
 .sidebar-item__label {
@@ -139,8 +140,23 @@ function handleSelect() {
 }
 
 .sidebar-item__link {
-  padding-left: 1.6rem;
-  font-size: 0.95rem;
+  padding-left: 1.75rem;
+  font-size: 0.9rem;
+  margin: 0.125rem 0;
+}
+
+.sidebar-item__link::before {
+  content: '';
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-text-muted, #94a3b8);
+  opacity: 0.5;
+  transition: all var(--transition-fast, 0.15s ease);
 }
 
 .sidebar-item__link:hover {
@@ -148,24 +164,37 @@ function handleSelect() {
   color: var(--color-accent);
 }
 
-.sidebar-item__link.is-active {
+.sidebar-item__link:hover::before {
   background: var(--color-accent);
+  opacity: 1;
+  transform: translateY(-50%) scale(1.2);
+}
+
+.sidebar-item__link.is-active {
+  background: var(--color-accent-gradient, var(--color-accent));
   color: #ffffff;
   font-weight: 600;
+  box-shadow: 0 2px 8px var(--color-accent-light, rgba(99, 102, 241, 0.3));
+}
+
+.sidebar-item__link.is-active::before {
+  background: #ffffff;
+  opacity: 1;
 }
 
 [data-theme='dark'] .sidebar-item__link.is-active {
-  background: var(--color-accent);
+  background: var(--color-accent-gradient, var(--color-accent));
   color: #ffffff;
 }
 
 .sidebar-item__caret {
-  width: 0.65rem;
-  height: 0.65rem;
+  width: 0.5rem;
+  height: 0.5rem;
   border-right: 2px solid currentColor;
   border-bottom: 2px solid currentColor;
   transform: rotate(45deg);
   transition: transform 0.2s ease;
+  opacity: 0.6;
 }
 
 .sidebar-item__caret.is-collapsed {
@@ -173,57 +202,66 @@ function handleSelect() {
 }
 
 .sidebar-item__children {
-  margin: 0.35rem 0 0.35rem 0.35rem;
-  padding-left: 0.75rem;
-  border-left: 1px solid var(--color-divider);
+  margin: 0.25rem 0 0.5rem 0.5rem;
+  padding-left: 0.875rem;
+  border-left: 2px solid var(--color-divider);
+  transition: border-color var(--transition-fast, 0.15s ease);
+}
+
+.sidebar-item__children:hover {
+  border-color: var(--color-accent-light, rgba(99, 102, 241, 0.3));
 }
 
 .accordion-enter-active,
 .accordion-leave-active {
-  transition: all 0.18s ease;
+  transition: all 0.2s ease;
 }
 
 .accordion-enter-from,
 .accordion-leave-to {
   opacity: 0;
-  transform: translateY(-4px);
+  transform: translateY(-6px);
 }
 
 /* 移动端优化 */
 @media (max-width: 640px) {
   .sidebar-item__group,
   .sidebar-item__link {
-    padding: 0.5rem 0.45rem;
+    padding: 0.625rem 0.625rem;
     font-size: 0.9rem;
-    min-height: 44px; /* 确保足够的触摸区域 */
+    min-height: 44px;
     display: flex;
     align-items: center;
   }
 
   .sidebar-item__link {
-    padding-left: 1.4rem;
+    padding-left: 1.5rem;
+  }
+
+  .sidebar-item__link::before {
+    left: 0.625rem;
   }
 
   .sidebar-item__caret {
-    width: 0.6rem;
-    height: 0.6rem;
+    width: 0.5rem;
+    height: 0.5rem;
   }
 
   .sidebar-item__children {
-    margin: 0.25rem 0 0.25rem 0.25rem;
-    padding-left: 0.6rem;
+    margin: 0.2rem 0 0.4rem 0.375rem;
+    padding-left: 0.75rem;
   }
 }
 
 @media (max-width: 375px) {
   .sidebar-item__group,
   .sidebar-item__link {
-    padding: 0.45rem 0.4rem;
+    padding: 0.5rem 0.5rem;
     font-size: 0.85rem;
   }
 
   .sidebar-item__link {
-    padding-left: 1.2rem;
+    padding-left: 1.25rem;
   }
 }
 </style>

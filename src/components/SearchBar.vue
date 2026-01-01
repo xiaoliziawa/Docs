@@ -229,7 +229,7 @@ function handleKeydown(event: KeyboardEvent) {
 <style scoped>
 .search-bar {
   position: relative;
-  width: min(460px, 100%);
+  width: min(480px, 100%);
 }
 
 .search-bar__input-wrapper {
@@ -238,21 +238,30 @@ function handleKeydown(event: KeyboardEvent) {
   align-items: center;
   background: var(--color-bg-surface);
   border: 1px solid var(--color-border);
-  border-radius: 0.375rem;
-  padding: 0.5rem 0.9rem 0.5rem 2.35rem;
-  transition: border-color var(--transition-fast), background 0.3s ease;
+  border-radius: var(--border-radius-md, 0.75rem);
+  padding: 0.625rem 1rem 0.625rem 2.75rem;
+  transition: all var(--transition-fast, 0.15s ease);
+  box-shadow: 0 1px 3px var(--color-shadow, rgba(0, 0, 0, 0.04));
 }
 
 .search-bar__input-wrapper:focus-within {
   border-color: var(--color-accent);
   background: var(--color-bg-surface);
+  box-shadow:
+    0 0 0 3px var(--color-accent-light, rgba(99, 102, 241, 0.1)),
+    0 4px 12px var(--color-shadow-lg, rgba(0, 0, 0, 0.08));
 }
 
 .search-bar__icon {
   position: absolute;
-  left: 0.85rem;
+  left: 1rem;
   font-size: 1rem;
-  opacity: 0.6;
+  opacity: 0.5;
+  transition: opacity var(--transition-fast, 0.15s ease);
+}
+
+.search-bar__input-wrapper:focus-within .search-bar__icon {
+  opacity: 0.8;
 }
 
 .search-bar__input {
@@ -262,29 +271,34 @@ function handleKeydown(event: KeyboardEvent) {
   background: transparent;
   font-size: 0.95rem;
   color: var(--color-text-primary);
+  font-weight: 450;
 }
 
 .search-bar__input::placeholder {
-  color: var(--color-text-secondary);
-  opacity: 0.6;
+  color: var(--color-text-muted, #94a3b8);
+  font-weight: 400;
 }
 
 .search-bar__results {
   position: absolute;
-  top: calc(100% + 0.5rem);
+  top: calc(100% + 0.625rem);
   left: 0;
   right: 0;
   margin: 0;
-  padding: 0.5rem 0;
+  padding: 0.625rem 0;
   list-style: none;
-  background: var(--color-bg-surface);
+  background: var(--color-toolbar-surface, rgba(255, 255, 255, 0.95));
   border: 1px solid var(--color-border);
-  border-radius: 0.5rem;
-  box-shadow: 0 4px 12px var(--color-shadow);
-  max-height: 320px;
+  border-radius: var(--border-radius-md, 0.75rem);
+  box-shadow:
+    0 4px 16px var(--color-shadow-lg, rgba(0, 0, 0, 0.08)),
+    0 8px 32px var(--color-shadow-xl, rgba(0, 0, 0, 0.12));
+  max-height: 360px;
   overflow-y: auto;
   z-index: 12;
-  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all var(--transition-fast, 0.15s ease);
 }
 
 .search-bar__result {
@@ -293,37 +307,38 @@ function handleKeydown(event: KeyboardEvent) {
 
 .search-bar__result button {
   width: 100%;
-  padding: 0.6rem 1rem;
+  padding: 0.75rem 1.25rem;
   background: transparent;
   border: none;
   text-align: left;
   cursor: pointer;
   color: var(--color-text-primary);
-  transition: color var(--transition-fast), background-color var(--transition-fast), transform 0.1s ease;
-  /* 移动端触摸优化 */
+  transition: all var(--transition-fast, 0.15s ease);
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
 
 .search-bar__result button:active {
-  transform: scale(0.98);
+  transform: scale(0.99);
 }
 
 .search-bar__result-title {
   display: block;
   font-weight: 600;
+  font-size: 0.95rem;
 }
 
 .search-bar__result-snippet {
   display: block;
-  margin-top: 0.25rem;
+  margin-top: 0.375rem;
   font-size: 0.82rem;
   color: var(--color-text-secondary);
+  line-height: 1.5;
 }
 
 .search-bar__result:hover,
 .search-bar__result.is-active {
-  background: var(--color-toolbar-hover);
+  background: var(--color-accent-light, rgba(99, 102, 241, 0.1));
 }
 
 .search-bar__result:hover button,
@@ -331,18 +346,27 @@ function handleKeydown(event: KeyboardEvent) {
   color: var(--color-accent);
 }
 
+.search-bar__result.is-active {
+  border-left: 3px solid var(--color-accent);
+}
+
 .search-bar__empty {
-  padding: 0.75rem 1rem;
-  color: var(--color-text-secondary);
+  padding: 1rem 1.25rem;
+  color: var(--color-text-muted, #94a3b8);
+  text-align: center;
+  font-size: 0.9rem;
 }
 
 .search-bar__history-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.5rem 1rem;
+  padding: 0.625rem 1.25rem;
   font-size: 0.75rem;
-  color: var(--color-text-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted, #94a3b8);
   border-bottom: 1px solid var(--color-border);
 }
 
@@ -351,14 +375,15 @@ function handleKeydown(event: KeyboardEvent) {
   border: none;
   color: var(--color-accent);
   font-size: 0.75rem;
+  font-weight: 500;
   cursor: pointer;
-  padding: 0.2rem 0.4rem;
-  border-radius: 0.25rem;
-  transition: background-color var(--transition-fast);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--border-radius-sm, 0.5rem);
+  transition: all var(--transition-fast, 0.15s ease);
 }
 
 .search-bar__clear-history:hover {
-  background: var(--color-toolbar-hover);
+  background: var(--color-accent-light, rgba(99, 102, 241, 0.1));
 }
 
 .search-bar__history-item {
@@ -371,28 +396,28 @@ function handleKeydown(event: KeyboardEvent) {
   flex: 1;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.625rem;
 }
 
 .search-bar__history-icon {
-  font-size: 0.85rem;
-  opacity: 0.6;
+  font-size: 0.875rem;
+  opacity: 0.5;
 }
 
 .search-bar__remove-history {
   position: absolute;
-  right: 0.5rem;
+  right: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
   background: none;
   border: none;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted, #94a3b8);
   font-size: 0.7rem;
   cursor: pointer;
-  padding: 0.3rem 0.5rem;
-  border-radius: 0.25rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: var(--border-radius-sm, 0.5rem);
   opacity: 0;
-  transition: opacity var(--transition-fast), background-color var(--transition-fast);
+  transition: all var(--transition-fast, 0.15s ease);
 }
 
 .search-bar__history-item:hover .search-bar__remove-history {
@@ -400,18 +425,19 @@ function handleKeydown(event: KeyboardEvent) {
 }
 
 .search-bar__remove-history:hover {
-  background: var(--color-toolbar-hover);
-  color: var(--color-accent);
+  background: var(--color-error, #ef4444);
+  color: #ffffff;
 }
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+  transform: translateY(-8px);
 }
 
 @media (max-width: 960px) {
@@ -423,16 +449,16 @@ function handleKeydown(event: KeyboardEvent) {
 @media (max-width: 720px) {
   .search-bar__results {
     right: auto;
-    width: calc(100vw - 2.5rem);
-    max-height: 280px;
+    width: calc(100vw - 2rem);
+    max-height: 300px;
   }
 
   .search-bar__input-wrapper {
-    padding: 0.45rem 0.8rem 0.45rem 2.2rem;
+    padding: 0.5rem 0.875rem 0.5rem 2.5rem;
   }
 
   .search-bar__icon {
-    left: 0.75rem;
+    left: 0.875rem;
     font-size: 0.9rem;
   }
 
@@ -441,7 +467,7 @@ function handleKeydown(event: KeyboardEvent) {
   }
 
   .search-bar__result button {
-    padding: 0.55rem 0.85rem;
+    padding: 0.625rem 1rem;
   }
 
   .search-bar__result-title {
@@ -459,11 +485,12 @@ function handleKeydown(event: KeyboardEvent) {
   }
 
   .search-bar__input-wrapper {
-    padding: 0.4rem 0.7rem 0.4rem 2rem;
+    padding: 0.45rem 0.75rem 0.45rem 2.25rem;
+    border-radius: var(--border-radius-sm, 0.5rem);
   }
 
   .search-bar__icon {
-    left: 0.65rem;
+    left: 0.75rem;
   }
 }
 </style>
