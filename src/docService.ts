@@ -226,11 +226,13 @@ export interface SidebarGroupNode {
 
 export type SidebarNode = SidebarDocNode | SidebarGroupNode
 
-interface SidebarConfig {
-  labels?: Record<string, string>
-  order?: string[]
-  childrenOrder?: Record<string, string[]>
+interface SidebarConfigItem {
+  path: string
+  label?: string
+  children?: SidebarConfigItem[]
 }
+
+type SidebarConfig = SidebarConfigItem[]
 
 const config: SidebarConfig = sidebarConfig
 
@@ -276,100 +278,37 @@ export function resetDocCache(): void {
 }
 
 function buildSidebar(docs: DocRecord[]): SidebarGroupNode[] {
-  const root: SidebarGroupNode = {
-    type: 'group',
-    path: '',
-    label: '',
-    children: [],
-  }
-
+  const docMap = new Map<string, DocRecord>()
   for (const doc of docs) {
-    insertDocNode(root, doc)
+    docMap.set(doc.slug, doc)
   }
 
-  applyConfig(root)
-  sortChildren(root, config.order ?? [])
-
-  return root.children.filter((node): node is SidebarGroupNode => node.type === 'group')
+  return config.map((item) => buildSidebarNode(item, docMap)) as SidebarGroupNode[]
 }
 
-function insertDocNode(root: SidebarGroupNode, doc: DocRecord): void {
-  const segments = doc.slug.split('/')
-  let current = root
-  let accumulated = ''
+function buildSidebarNode(
+  configItem: SidebarConfigItem,
+  docMap: Map<string, DocRecord>,
+): SidebarNode {
+  const doc = docMap.get(configItem.path)
 
-  for (let index = 0; index < segments.length - 1; index += 1) {
-    const segment = segments[index]
-    accumulated = accumulated ? `${accumulated}/${segment}` : segment
-
-    let group = current.children.find(
-      (child): child is SidebarGroupNode => child.type === 'group' && child.path === accumulated,
-    )
-
-    if (!group) {
-      group = {
-        type: 'group',
-        path: accumulated,
-        label: deriveTitle(segment),
-        children: [],
-      }
-
-      current.children.push(group)
+  if (configItem.children && configItem.children.length > 0) {
+    const group: SidebarGroupNode = {
+      type: 'group',
+      path: configItem.path,
+      label: configItem.label ?? doc?.title ?? deriveTitle(configItem.path.split('/').pop() ?? configItem.path),
+      children: configItem.children.map((child) => buildSidebarNode(child, docMap)),
     }
-
-    current = group
+    return group
   }
 
   const docNode: SidebarDocNode = {
     type: 'doc',
-    path: doc.slug,
-    label: doc.title,
-    slug: doc.slug,
+    path: configItem.path,
+    label: configItem.label ?? doc?.title ?? deriveTitle(configItem.path.split('/').pop() ?? configItem.path),
+    slug: configItem.path,
   }
-
-  current.children.push(docNode)
-}
-
-function applyConfig(group: SidebarGroupNode): void {
-  if (group.path && config.labels?.[group.path]) {
-    group.label = config.labels[group.path]
-  } else if (!group.label && group.path) {
-    group.label = deriveTitle(group.path.split('/').pop() ?? group.path)
-  }
-
-  for (const child of group.children) {
-    if (child.type === 'group') {
-      applyConfig(child)
-    } else if (config.labels?.[child.path]) {
-      child.label = config.labels[child.path]
-    }
-  }
-}
-
-function sortChildren(group: SidebarGroupNode, topLevelOrder: string[]): void {
-  const baseOrder = group.path ? config.childrenOrder?.[group.path] ?? [] : topLevelOrder
-  const orderMap = new Map<string, number>()
-
-  baseOrder.forEach((path, index) => {
-    orderMap.set(path, index)
-  })
-
-  group.children.sort((a, b) => {
-    const orderA = orderMap.get(a.path)
-    const orderB = orderMap.get(b.path)
-
-    if (orderA !== undefined || orderB !== undefined) {
-      return (orderA ?? Number.MAX_SAFE_INTEGER) - (orderB ?? Number.MAX_SAFE_INTEGER)
-    }
-
-    return a.label.localeCompare(b.label, 'zh-Hans', { sensitivity: 'base' })
-  })
-
-  for (const child of group.children) {
-    if (child.type === 'group') {
-      sortChildren(child, topLevelOrder)
-    }
-  }
+  return docNode
 }
 
 function extractTitle(raw: string): string | null {

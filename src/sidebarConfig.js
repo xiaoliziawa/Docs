@@ -1,41 +1,80 @@
-export default {
-  labels: {
-    guide: '指南',
-    'guide/introduction': '简介',
-    'guide/getting-started': '快速上手',
-    'guide/architecture': '架构专题',
-    'guide/architecture/overview': '架构概览',
-    'guide/architecture/patterns': '设计模式',
-    'guide/architecture/patterns/state-management': '状态管理',
-    'guide/architecture/patterns/state-management/fundamentals': '基础篇',
-    'guide/architecture/patterns/state-management/advanced': '进阶技巧',
-    'guide/architecture/patterns/rendering': '渲染策略',
-    'guide/architecture/patterns/rendering/performance': '性能优化',
-    api: 'API',
-    'api/reference': 'API 参考',
-    examples: '示例',
-    'examples/custom-sidebar': '自定义侧边栏示例',
-    document: '文档',
-    'document/text': '文章1',
-    'document/public_welfare_station': '公益站',
+/**
+ * 侧边栏配置
+ *
+ * 使用简洁的嵌套树形结构配置侧边栏
+ *
+ * 配置格式说明:
+ * - path: 对应 docs 目录下的文件夹或文件路径（不含 .md 后缀）
+ * - label: 显示名称（可选，不填则自动从文档标题或路径推导）
+ * - children: 子项数组（可选，有子项则为分组，无则为文档链接）
+ *
+ * 示例:
+ * {
+ *   path: 'guide',
+ *   label: '指南',
+ *   children: [
+ *     { path: 'guide/intro', label: '简介' },
+ *     { path: 'guide/start' }  // label 可省略，自动推导
+ *   ]
+ * }
+ */
+export default [
+  {
+    path: 'guide',
+    label: '指南',
+    children: [
+      { path: 'guide/introduction', label: '简介' },
+      { path: 'guide/getting-started', label: '快速上手' },
+      {
+        path: 'guide/architecture',
+        label: '架构专题',
+        children: [
+          { path: 'guide/architecture/overview', label: '架构概览' },
+          {
+            path: 'guide/architecture/patterns',
+            label: '设计模式',
+            children: [
+              {
+                path: 'guide/architecture/patterns/state-management',
+                label: '状态管理',
+                children: [
+                  { path: 'guide/architecture/patterns/state-management/fundamentals', label: '基础篇' },
+                  { path: 'guide/architecture/patterns/state-management/advanced', label: '进阶技巧' },
+                ],
+              },
+              {
+                path: 'guide/architecture/patterns/rendering',
+                label: '渲染策略',
+                children: [
+                  { path: 'guide/architecture/patterns/rendering/performance', label: '性能优化' },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
   },
-  order: ['guide', 'api', 'examples', 'document'],
-  childrenOrder: {
-    guide: ['guide/introduction', 'guide/getting-started', 'guide/architecture'],
-    'guide/architecture': ['guide/architecture/overview', 'guide/architecture/patterns'],
-    'guide/architecture/patterns': [
-      'guide/architecture/patterns/state-management',
-      'guide/architecture/patterns/rendering',
+  {
+    path: 'api',
+    label: 'API',
+    children: [
+      { path: 'api/reference', label: 'API 参考' },
     ],
-    'guide/architecture/patterns/state-management': [
-      'guide/architecture/patterns/state-management/fundamentals',
-      'guide/architecture/patterns/state-management/advanced',
-    ],
-    'guide/architecture/patterns/rendering': [
-      'guide/architecture/patterns/rendering/performance',
-    ],
-    api: ['api/reference'],
-    examples: ['examples/custom-sidebar'],
-    document: ['document/text', 'document/public_welfare_station'],
   },
-}
+  {
+    path: 'examples',
+    label: '示例',
+    children: [
+      { path: 'examples/custom-sidebar', label: '自定义侧边栏示例' },
+    ],
+  },
+  {
+    path: 'document',
+    label: '文档',
+    children: [
+      { path: 'document/text', label: '文章1' },
+      { path: 'document/public_welfare_station', label: '公益站' },
+    ],
+  },
+]

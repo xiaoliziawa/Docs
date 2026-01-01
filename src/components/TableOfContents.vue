@@ -12,6 +12,11 @@ const props = defineProps<{ content: string }>()
 const tocItems = ref<TocItem[]>([])
 const activeId = ref<string>('')
 const isVisible = ref(false)
+const isCollapsed = ref(false)
+
+function toggleCollapse() {
+  isCollapsed.value = !isCollapsed.value
+}
 
 const hasToc = computed(() => tocItems.value.length > 0)
 
@@ -98,23 +103,35 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div v-if="hasToc" class="toc-container" :class="{ 'is-visible': isVisible }">
-    <button 
-      type="button" 
-      class="toc-toggle" 
+  <div v-if="hasToc" class="toc-container" :class="{ 'is-visible': isVisible, 'is-collapsed': isCollapsed }">
+    <button
+      type="button"
+      class="toc-toggle"
       @click="toggleToc"
       aria-label="Toggle table of contents"
     >
       <span class="toc-toggle-icon">☰</span>
       <span class="toc-toggle-text">目录</span>
     </button>
-    
-    <nav class="toc" :class="{ 'is-visible': isVisible }">
+
+    <nav class="toc" :class="{ 'is-visible': isVisible, 'is-collapsed': isCollapsed }">
+      <div class="toc-header-desktop">
+        <span class="toc-title">目录</span>
+        <button
+          type="button"
+          class="toc-collapse-btn"
+          @click="toggleCollapse"
+          :aria-label="isCollapsed ? '展开目录' : '收起目录'"
+          :title="isCollapsed ? '展开目录' : '收起目录'"
+        >
+          <span class="collapse-icon">{{ isCollapsed ? '◀' : '▶' }}</span>
+        </button>
+      </div>
       <div class="toc-header">
         <span class="toc-title">目录</span>
-        <button 
-          type="button" 
-          class="toc-close" 
+        <button
+          type="button"
+          class="toc-close"
           @click="toggleToc"
           aria-label="Close table of contents"
         >
@@ -150,6 +167,11 @@ onBeforeUnmount(() => {
   right: 2rem;
   top: 6rem;
   z-index: 15;
+  transition: all 0.3s ease;
+}
+
+.toc-container.is-collapsed {
+  right: 0;
 }
 
 .toc-toggle {
@@ -186,7 +208,64 @@ onBeforeUnmount(() => {
   background: var(--color-bg-surface);
   box-shadow: 0 2px 12px var(--color-shadow);
   overflow-y: auto;
+  overflow-x: hidden;
   transition: all 0.3s ease;
+}
+
+.toc.is-collapsed {
+  width: 42px;
+  padding: 0.5rem;
+  border-radius: 0.5rem 0 0 0.5rem;
+}
+
+.toc.is-collapsed .toc-list {
+  display: none;
+}
+
+.toc.is-collapsed .toc-header-desktop .toc-title {
+  display: none;
+}
+
+.toc-header-desktop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.toc.is-collapsed .toc-header-desktop {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+  justify-content: center;
+}
+
+.toc-collapse-btn {
+  width: 1.75rem;
+  height: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.toc-collapse-btn:hover {
+  background: var(--color-toolbar-hover);
+  color: var(--color-accent);
+}
+
+.collapse-icon {
+  display: inline-block;
+  transition: transform 0.3s ease;
 }
 
 .toc-header {
@@ -285,9 +364,17 @@ onBeforeUnmount(() => {
     right: 1rem;
     top: 5rem;
   }
-  
+
+  .toc-container.is-collapsed {
+    right: 0;
+  }
+
   .toc {
     width: 220px;
+  }
+
+  .toc.is-collapsed {
+    width: 42px;
   }
 }
 
@@ -297,11 +384,19 @@ onBeforeUnmount(() => {
     bottom: 6rem;
     top: auto;
   }
-  
+
+  .toc-container.is-collapsed {
+    right: 1rem;
+  }
+
   .toc-toggle {
     display: flex;
   }
-  
+
+  .toc-header-desktop {
+    display: none;
+  }
+
   .toc {
     position: fixed;
     right: 0;
@@ -314,13 +409,24 @@ onBeforeUnmount(() => {
     opacity: 0;
     pointer-events: none;
   }
-  
+
+  .toc.is-collapsed {
+    width: 100%;
+    max-width: 320px;
+    padding: 1rem;
+    border-radius: 0.5rem 0.5rem 0 0;
+  }
+
   .toc.is-visible {
     transform: translateY(0);
     opacity: 1;
     pointer-events: auto;
   }
-  
+
+  .toc.is-collapsed .toc-list {
+    display: block;
+  }
+
   .toc-header {
     display: flex;
   }
@@ -331,7 +437,7 @@ onBeforeUnmount(() => {
     padding: 0.4rem 0.8rem;
     font-size: 0.8rem;
   }
-  
+
   .toc {
     max-width: 100%;
     border-radius: 0;
