@@ -164,10 +164,10 @@ onBeforeUnmount(() => {
 <style scoped>
 .toc-container {
   position: fixed;
-  right: 2rem;
-  top: 6rem;
+  right: 1.5rem;
+  top: 5.5rem;
   z-index: 15;
-  transition: all var(--transition-normal, 0.25s ease);
+  transition: all var(--transition-normal);
 }
 
 .toc-container.is-collapsed {
@@ -178,52 +178,50 @@ onBeforeUnmount(() => {
   display: none;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.625rem 1.125rem;
+  padding: 0.5rem 0.875rem;
   border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-sm, 0.5rem);
-  background: var(--color-toolbar-surface, rgba(255, 255, 255, 0.95));
+  border-radius: var(--border-radius-sm);
+  background: var(--color-toolbar-surface);
   color: var(--color-text-primary);
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: 0.8rem;
+  font-weight: 450;
   cursor: pointer;
-  box-shadow: 0 4px 12px var(--color-shadow-lg, rgba(0, 0, 0, 0.08));
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition: all var(--transition-fast, 0.15s ease);
+  box-shadow: 0 2px 6px var(--color-shadow);
+  backdrop-filter: blur(var(--backdrop-blur));
+  -webkit-backdrop-filter: blur(var(--backdrop-blur));
+  transition: all var(--transition-fast);
   -webkit-tap-highlight-color: transparent;
 }
 
 .toc-toggle:hover {
-  background: var(--color-accent-light, rgba(99, 102, 241, 0.1));
+  background: var(--color-toolbar-hover);
   border-color: var(--color-accent);
   color: var(--color-accent);
 }
 
 .toc-toggle-icon {
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 .toc {
-  width: 260px;
-  max-height: calc(100vh - 8rem);
-  padding: 1.25rem;
+  width: 220px;
+  max-height: calc(100vh - 7rem);
+  padding: 1rem;
   border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-md, 0.75rem);
-  background: var(--color-toolbar-surface, rgba(255, 255, 255, 0.95));
-  box-shadow:
-    0 4px 16px var(--color-shadow-lg, rgba(0, 0, 0, 0.08)),
-    0 8px 32px var(--color-shadow-xl, rgba(0, 0, 0, 0.04));
+  border-radius: var(--border-radius-sm);
+  background: var(--color-toolbar-surface);
+  box-shadow: 0 2px 8px var(--color-shadow);
   overflow-y: auto;
   overflow-x: hidden;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  transition: all var(--transition-normal, 0.25s ease);
+  backdrop-filter: blur(var(--backdrop-blur));
+  -webkit-backdrop-filter: blur(var(--backdrop-blur));
+  transition: all var(--transition-normal);
 }
 
 .toc.is-collapsed {
-  width: 48px;
-  padding: 0.625rem;
-  border-radius: var(--border-radius-sm, 0.5rem) 0 0 var(--border-radius-sm, 0.5rem);
+  width: 40px;
+  padding: 0.5rem;
+  border-radius: var(--border-radius-sm) 0 0 var(--border-radius-sm);
 }
 
 .toc.is-collapsed .toc-list {
@@ -238,9 +236,9 @@ onBeforeUnmount(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
-  padding-bottom: 0.875rem;
-  border-bottom: 2px solid var(--color-border);
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.625rem;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .toc.is-collapsed .toc-header-desktop {
@@ -251,67 +249,65 @@ onBeforeUnmount(() => {
 }
 
 .toc-collapse-btn {
-  width: 2rem;
-  height: 2rem;
+  width: 1.75rem;
+  height: 1.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
   border: none;
   background: transparent;
-  color: var(--color-text-muted, #94a3b8);
-  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  font-size: 0.7rem;
   cursor: pointer;
-  border-radius: var(--border-radius-sm, 0.5rem);
-  transition: all var(--transition-fast, 0.15s ease);
+  border-radius: var(--border-radius-sm);
+  transition: all var(--transition-fast);
   flex-shrink: 0;
 }
 
 .toc-collapse-btn:hover {
-  background: var(--color-accent-light, rgba(99, 102, 241, 0.1));
+  background: var(--color-toolbar-hover);
   color: var(--color-accent);
 }
 
 .collapse-icon {
   display: inline-block;
-  transition: transform var(--transition-normal, 0.25s ease);
+  transition: transform var(--transition-normal);
 }
 
 .toc-header {
   display: none;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.875rem;
-  padding-bottom: 0.875rem;
-  border-bottom: 2px solid var(--color-border);
+  margin-bottom: 0.625rem;
+  padding-bottom: 0.625rem;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .toc-title {
-  font-weight: 700;
-  font-size: 0.9rem;
-  letter-spacing: -0.01em;
-  background: var(--color-accent-gradient, var(--color-accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  color: var(--color-text-primary);
 }
 
 .toc-close {
-  width: 2rem;
-  height: 2rem;
+  width: 1.75rem;
+  height: 1.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
   border: none;
   background: transparent;
-  color: var(--color-text-muted, #94a3b8);
-  font-size: 1.5rem;
+  color: var(--color-text-muted);
+  font-size: 1.25rem;
   cursor: pointer;
-  border-radius: var(--border-radius-sm, 0.5rem);
-  transition: all var(--transition-fast, 0.15s ease);
+  border-radius: var(--border-radius-sm);
+  transition: all var(--transition-fast);
 }
 
 .toc-close:hover {
-  background: var(--color-accent-light, rgba(99, 102, 241, 0.1));
+  background: var(--color-toolbar-hover);
   color: var(--color-accent);
 }
 
@@ -322,7 +318,7 @@ onBeforeUnmount(() => {
 }
 
 .toc-item {
-  margin: 0.375rem 0;
+  margin: 0.25rem 0;
 }
 
 .toc-item--level-1 {
@@ -330,76 +326,52 @@ onBeforeUnmount(() => {
 }
 
 .toc-item--level-2 {
-  margin-left: 0.875rem;
+  margin-left: 0.75rem;
 }
 
 .toc-item--level-3 {
-  margin-left: 1.75rem;
+  margin-left: 1.5rem;
 }
 
 .toc-item--level-4 {
-  margin-left: 2.5rem;
+  margin-left: 2.25rem;
 }
 
 .toc-item--level-5,
 .toc-item--level-6 {
-  margin-left: 3.25rem;
+  margin-left: 3rem;
 }
 
 .toc-link {
   display: block;
-  padding: 0.4rem 0.625rem;
+  padding: 0.3rem 0.5rem;
   color: var(--color-text-secondary);
-  font-size: 0.85rem;
-  line-height: 1.45;
-  border-radius: var(--border-radius-sm, 0.5rem);
-  transition: all var(--transition-fast, 0.15s ease);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  border-radius: var(--border-radius-sm);
+  transition: all var(--transition-fast);
   text-decoration: none;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  position: relative;
-}
-
-.toc-link::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 0;
-  background: var(--color-accent-gradient, var(--color-accent));
-  border-radius: 2px;
-  transition: height var(--transition-fast, 0.15s ease);
 }
 
 .toc-link:hover {
   color: var(--color-accent);
-  background: var(--color-accent-light, rgba(99, 102, 241, 0.1));
-  padding-left: 0.875rem;
-}
-
-.toc-link:hover::before {
-  height: 60%;
+  background: var(--color-toolbar-hover);
 }
 
 .toc-item.is-active .toc-link {
   color: var(--color-accent);
-  background: var(--color-accent-light, rgba(99, 102, 241, 0.1));
-  font-weight: 600;
-  padding-left: 0.875rem;
-}
-
-.toc-item.is-active .toc-link::before {
-  height: 60%;
+  background: var(--color-accent-light);
+  font-weight: 500;
 }
 
 /* Tablet and mobile */
 @media (max-width: 1200px) {
   .toc-container {
-    right: 1.25rem;
-    top: 5.5rem;
+    right: 1rem;
+    top: 5rem;
   }
 
   .toc-container.is-collapsed {
@@ -407,23 +379,23 @@ onBeforeUnmount(() => {
   }
 
   .toc {
-    width: 240px;
+    width: 200px;
   }
 
   .toc.is-collapsed {
-    width: 44px;
+    width: 36px;
   }
 }
 
 @media (max-width: 960px) {
   .toc-container {
-    right: 1.25rem;
-    bottom: 6rem;
+    right: 1rem;
+    bottom: 5rem;
     top: auto;
   }
 
   .toc-container.is-collapsed {
-    right: 1.25rem;
+    right: 1rem;
   }
 
   .toc-toggle {
@@ -439,22 +411,20 @@ onBeforeUnmount(() => {
     right: 0;
     bottom: 0;
     width: 100%;
-    max-width: 360px;
-    max-height: 60vh;
-    border-radius: var(--border-radius-lg, 1rem) var(--border-radius-lg, 1rem) 0 0;
+    max-width: 320px;
+    max-height: 55vh;
+    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
     transform: translateY(100%);
     opacity: 0;
     pointer-events: none;
-    box-shadow:
-      0 -4px 24px var(--color-shadow-lg, rgba(0, 0, 0, 0.1)),
-      0 -8px 48px var(--color-shadow-xl, rgba(0, 0, 0, 0.15));
+    box-shadow: 0 -2px 12px var(--color-shadow-lg);
   }
 
   .toc.is-collapsed {
     width: 100%;
-    max-width: 360px;
-    padding: 1.25rem;
-    border-radius: var(--border-radius-lg, 1rem) var(--border-radius-lg, 1rem) 0 0;
+    max-width: 320px;
+    padding: 1rem;
+    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
   }
 
   .toc.is-visible {
@@ -474,8 +444,8 @@ onBeforeUnmount(() => {
 
 @media (max-width: 640px) {
   .toc-toggle {
-    padding: 0.5rem 0.875rem;
-    font-size: 0.8rem;
+    padding: 0.45rem 0.75rem;
+    font-size: 0.75rem;
   }
 
   .toc {

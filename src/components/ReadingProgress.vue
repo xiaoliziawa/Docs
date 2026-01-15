@@ -55,7 +55,7 @@ onBeforeUnmount(() => {
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
+  height: 2px;
   background: transparent;
   z-index: 100;
   pointer-events: none;
@@ -63,18 +63,7 @@ onBeforeUnmount(() => {
 
 .reading-progress__bar {
   height: 100%;
-  background: var(--color-accent-gradient, linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%));
-  transition: width 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow:
-    0 0 10px var(--color-accent, #6366f1),
-    0 0 20px rgba(99, 102, 241, 0.3);
-  border-radius: 0 2px 2px 0;
-}
-
-[data-theme='dark'] .reading-progress__bar {
-  background: var(--color-accent-gradient, linear-gradient(90deg, #a78bfa 0%, #f472b6 100%));
-  box-shadow:
-    0 0 12px var(--color-accent, #a78bfa),
-    0 0 24px rgba(167, 139, 250, 0.4);
+  background: var(--color-accent);
+  transition: width 0.1s ease;
 }
 </style>

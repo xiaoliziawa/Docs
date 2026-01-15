@@ -100,16 +100,16 @@ function handleSelect() {
   width: 100%;
   background: transparent;
   border: none;
-  padding: 0.5rem 0.75rem;
+  padding: 0.5rem 0.625rem;
   text-align: left;
   font: inherit;
   color: var(--color-text-secondary);
   cursor: pointer;
-  border-radius: var(--border-radius-sm, 0.5rem);
+  border-radius: var(--border-radius-sm);
   white-space: normal;
   word-break: break-word;
-  line-height: 1.45;
-  transition: all var(--transition-fast, 0.15s ease);
+  line-height: 1.5;
+  transition: all var(--transition-fast);
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   position: relative;
@@ -124,9 +124,10 @@ function handleSelect() {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  font-family: var(--font-serif);
   font-weight: 600;
   color: var(--color-text-primary);
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.125rem;
 }
 
 .sidebar-item__label {
@@ -140,23 +141,23 @@ function handleSelect() {
 }
 
 .sidebar-item__link {
-  padding-left: 1.75rem;
-  font-size: 0.9rem;
+  padding-left: 1.5rem;
+  font-size: 0.875rem;
   margin: 0.125rem 0;
 }
 
 .sidebar-item__link::before {
   content: '';
   position: absolute;
-  left: 0.75rem;
+  left: 0.625rem;
   top: 50%;
   transform: translateY(-50%);
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: var(--color-text-muted, #94a3b8);
-  opacity: 0.5;
-  transition: all var(--transition-fast, 0.15s ease);
+  background: var(--color-text-muted);
+  opacity: 0.4;
+  transition: all var(--transition-fast);
 }
 
 .sidebar-item__link:hover {
@@ -167,14 +168,12 @@ function handleSelect() {
 .sidebar-item__link:hover::before {
   background: var(--color-accent);
   opacity: 1;
-  transform: translateY(-50%) scale(1.2);
 }
 
 .sidebar-item__link.is-active {
-  background: var(--color-accent-gradient, var(--color-accent));
+  background: var(--color-accent);
   color: #ffffff;
-  font-weight: 600;
-  box-shadow: 0 2px 8px var(--color-accent-light, rgba(99, 102, 241, 0.3));
+  font-weight: 500;
 }
 
 .sidebar-item__link.is-active::before {
@@ -182,19 +181,14 @@ function handleSelect() {
   opacity: 1;
 }
 
-[data-theme='dark'] .sidebar-item__link.is-active {
-  background: var(--color-accent-gradient, var(--color-accent));
-  color: #ffffff;
-}
-
 .sidebar-item__caret {
-  width: 0.5rem;
-  height: 0.5rem;
-  border-right: 2px solid currentColor;
-  border-bottom: 2px solid currentColor;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
   transform: rotate(45deg);
-  transition: transform 0.2s ease;
-  opacity: 0.6;
+  transition: transform 0.15s ease;
+  opacity: 0.5;
 }
 
 .sidebar-item__caret.is-collapsed {
@@ -202,66 +196,61 @@ function handleSelect() {
 }
 
 .sidebar-item__children {
-  margin: 0.25rem 0 0.5rem 0.5rem;
-  padding-left: 0.875rem;
-  border-left: 2px solid var(--color-divider);
-  transition: border-color var(--transition-fast, 0.15s ease);
-}
-
-.sidebar-item__children:hover {
-  border-color: var(--color-accent-light, rgba(99, 102, 241, 0.3));
+  margin: 0.25rem 0 0.375rem 0.5rem;
+  padding-left: 0.75rem;
+  border-left: 1px solid var(--color-divider);
 }
 
 .accordion-enter-active,
 .accordion-leave-active {
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .accordion-enter-from,
 .accordion-leave-to {
   opacity: 0;
-  transform: translateY(-6px);
+  transform: translateY(-4px);
 }
 
 /* 移动端优化 */
 @media (max-width: 640px) {
   .sidebar-item__group,
   .sidebar-item__link {
-    padding: 0.625rem 0.625rem;
-    font-size: 0.9rem;
+    padding: 0.625rem 0.5rem;
+    font-size: 0.875rem;
     min-height: 44px;
     display: flex;
     align-items: center;
   }
 
   .sidebar-item__link {
-    padding-left: 1.5rem;
+    padding-left: 1.375rem;
   }
 
   .sidebar-item__link::before {
-    left: 0.625rem;
+    left: 0.5rem;
   }
 
   .sidebar-item__caret {
-    width: 0.5rem;
-    height: 0.5rem;
+    width: 0.4rem;
+    height: 0.4rem;
   }
 
   .sidebar-item__children {
-    margin: 0.2rem 0 0.4rem 0.375rem;
-    padding-left: 0.75rem;
+    margin: 0.2rem 0 0.3rem 0.375rem;
+    padding-left: 0.625rem;
   }
 }
 
 @media (max-width: 375px) {
   .sidebar-item__group,
   .sidebar-item__link {
-    padding: 0.5rem 0.5rem;
+    padding: 0.5rem 0.4rem;
     font-size: 0.85rem;
   }
 
   .sidebar-item__link {
-    padding-left: 1.25rem;
+    padding-left: 1.125rem;
   }
 }
 </style>
